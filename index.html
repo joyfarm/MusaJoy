@@ -1,0 +1,971 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MusaJoy 코딩수업</title>
+  <meta name="description" content="MusaJoy 코딩수업 · 아두이노, 마이크로비트, 파이썬, 블록코딩, 언플러그드" />
+
+  <style>
+    :root{
+      --bg1:#fafafa;
+      --bg2:#ffffff;
+      --text:#111827;
+      --muted:#4b5563;
+      --line:#e5e7eb;
+      --card:#ffffff;
+      --chip-bg:rgba(255,255,255,.75);
+      --shadow: 0 8px 24px rgba(0,0,0,.06);
+      --radius: 22px;
+      --radius2: 28px;
+      --primary:#111827;
+      --primary-ink:#ffffff;
+      --focus: rgba(17,24,39,.18);
+      --max: 1120px;
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans KR", Arial, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+      color:var(--text);
+      background: linear-gradient(180deg, var(--bg1), var(--bg2) 40%, var(--bg1));
+    }
+
+    a{color:inherit; text-decoration:none}
+    button{font-family:inherit}
+    img{max-width:100%; display:block}
+
+    .container{max-width:var(--max); margin:0 auto; padding:0 16px}
+    @media (min-width: 640px){ .container{padding:0 24px} }
+
+    /* Header */
+    .header{
+      position:sticky; top:0; z-index:50;
+      backdrop-filter: blur(10px);
+      background: rgba(255,255,255,.72);
+      border-bottom:1px solid rgba(229,231,235,.8);
+    }
+    .header-inner{
+      display:flex; align-items:center; justify-content:space-between;
+      padding:14px 0; gap:12px;
+    }
+    .brand{
+      display:flex; align-items:center; gap:10px;
+      min-width: 200px;
+    }
+    .logo{
+      width:38px; height:38px;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background:#fff;
+      box-shadow: 0 6px 14px rgba(0,0,0,.06);
+      display:grid; place-items:center;
+      font-weight:800;
+    }
+    .brand-title{line-height:1.1}
+    .brand-title .name{font-weight:800}
+    .brand-title .sub{font-size:12px; color:var(--muted); margin-top:2px}
+
+    .nav{
+      display:none;
+      gap:6px; align-items:center;
+    }
+    .nav a{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:10px 12px;
+      border-radius:14px;
+      font-size:14px;
+      font-weight:600;
+      color:#374151;
+      transition: background .15s ease, color .15s ease;
+    }
+    .nav a:hover{background:#f3f4f6}
+    .nav a.active{
+      background: var(--primary);
+      color: var(--primary-ink);
+    }
+
+    .cta{
+      display:inline-flex; align-items:center; justify-content:center;
+      border:1px solid var(--line);
+      background:#fff;
+      padding:10px 12px;
+      border-radius:14px;
+      font-size:14px;
+      font-weight:700;
+      box-shadow: 0 6px 14px rgba(0,0,0,.05);
+      transition: background .15s ease;
+      white-space:nowrap;
+    }
+    .cta:hover{background:#f9fafb}
+
+    @media (min-width: 900px){
+      .nav{display:flex}
+    }
+
+    /* Mobile nav */
+    .mnav-wrap{
+      display:block;
+      border-top:1px solid var(--line);
+      border-bottom:1px solid var(--line);
+      background: rgba(255,255,255,.65);
+      backdrop-filter: blur(10px);
+    }
+    .mnav{
+      display:flex; gap:8px;
+      overflow:auto;
+      padding:10px 0;
+    }
+    .mnav button{
+      flex:0 0 auto;
+      display:inline-flex; align-items:center; gap:8px;
+      padding:10px 12px;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background:#fff;
+      font-size:14px; font-weight:700;
+      color:#374151;
+    }
+    .mnav button.active{
+      background: var(--primary);
+      color: var(--primary-ink);
+      border-color: transparent;
+    }
+    @media (min-width: 900px){ .mnav-wrap{display:none} }
+
+    /* Hero */
+    .hero{padding:44px 0 28px}
+    @media (min-width: 640px){ .hero{padding:56px 0 30px} }
+
+    .hero-grid{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 26px;
+      align-items:center;
+    }
+    @media (min-width: 1024px){
+      .hero-grid{grid-template-columns: 1.1fr .9fr; gap: 40px;}
+    }
+
+    .chips{display:flex; flex-wrap:wrap; gap:8px}
+    .chip{
+      display:inline-flex; align-items:center;
+      padding:7px 12px;
+      border-radius: 999px;
+      background: var(--chip-bg);
+      border:1px solid var(--line);
+      color:#374151;
+      font-size:13px;
+      box-shadow: 0 4px 14px rgba(0,0,0,.04);
+    }
+
+    h1{
+      margin:14px 0 0;
+      font-size: 32px;
+      letter-spacing: -0.02em;
+      line-height:1.18;
+    }
+    @media (min-width: 640px){ h1{font-size: 40px} }
+
+    .lead{
+      margin:14px 0 0;
+      color:#374151;
+      font-size:16px;
+      line-height:1.75;
+    }
+
+    .hero-actions{margin-top:18px; display:flex; flex-direction:column; gap:10px}
+    @media (min-width: 640px){ .hero-actions{flex-direction:row} }
+
+    .btn{
+      display:inline-flex; justify-content:center; align-items:center;
+      padding:12px 16px;
+      border-radius: 16px;
+      font-size:14px;
+      font-weight:800;
+      border:1px solid var(--line);
+      background:#fff;
+      box-shadow: 0 10px 24px rgba(0,0,0,.06);
+      transition: transform .08s ease, opacity .15s ease, background .15s ease;
+      cursor:pointer;
+      white-space:nowrap;
+    }
+    .btn:hover{background:#f9fafb}
+    .btn:active{transform: translateY(1px)}
+    .btn.primary{
+      background: var(--primary);
+      border-color: transparent;
+      color: var(--primary-ink);
+    }
+    .btn.primary:hover{opacity:.92}
+
+    .stats{
+      margin-top:16px;
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:10px;
+    }
+    @media (min-width: 640px){ .stats{grid-template-columns: repeat(3, 1fr)} }
+
+    .stat{
+      border:1px solid var(--line);
+      background: var(--card);
+      border-radius: var(--radius);
+      padding:14px;
+      box-shadow: 0 10px 24px rgba(0,0,0,.05);
+    }
+    .stat .k{font-size:12px; color:#6b7280; font-weight:800}
+    .stat .v{margin-top:6px; font-size:14px; font-weight:900}
+
+    /* Mascot card */
+    .mascot-wrap{
+      position:relative;
+    }
+    .glow{
+      position:absolute;
+      inset:-22px;
+      border-radius: 32px;
+      background: rgba(243,244,246,.9);
+      filter: blur(28px);
+    }
+    .mascot{
+      position:relative;
+      border:1px solid var(--line);
+      background: #fff;
+      border-radius: 32px;
+      box-shadow: var(--shadow);
+      padding: 18px;
+      overflow:hidden;
+    }
+    .mascot-top{
+      display:flex; align-items:flex-start; justify-content:space-between; gap:10px
+    }
+    .mascot-top .t1{font-weight:900}
+    .mascot-top .t2{margin-top:4px; font-size:14px; color:#6b7280}
+    .badge{
+      display:inline-flex; align-items:center;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background:#fff;
+      font-size:12px;
+      font-weight:800;
+      color:#374151;
+    }
+    .mascot-img{
+      margin-top:16px;
+      display:grid; place-items:center;
+    }
+    .mascot-img img{
+      height: 320px;
+      width:auto;
+      object-fit:contain;
+      user-select:none;
+    }
+    .keyword{
+      margin-top:16px;
+      border:1px solid var(--line);
+      background:#f9fafb;
+      border-radius: var(--radius);
+      padding:14px;
+      font-size:14px;
+      color:#374151;
+    }
+    .keyword b{display:block; color:#111827; margin-bottom:6px}
+
+    /* Sections */
+    section{
+      scroll-margin-top: 92px;
+      padding: 54px 0;
+    }
+    @media (min-width: 640px){ section{padding: 62px 0} }
+
+    .section-head{max-width: 680px}
+    .section-head h2{
+      margin:0;
+      font-size: 26px;
+      letter-spacing:-0.02em;
+    }
+    @media (min-width: 640px){ .section-head h2{font-size: 32px} }
+
+    .section-head p{
+      margin:12px 0 0;
+      color:#6b7280;
+      line-height:1.7;
+      font-size:16px;
+    }
+
+    .grid{
+      margin-top:22px;
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:12px;
+    }
+    @media (min-width: 1024px){ .grid{grid-template-columns: repeat(3, 1fr); gap:14px;} }
+
+    .card{
+      border:1px solid var(--line);
+      background: var(--card);
+      border-radius: var(--radius);
+      padding:18px;
+      box-shadow: 0 10px 24px rgba(0,0,0,.05);
+    }
+    .card-top{display:flex; gap:10px; align-items:flex-start}
+    .icon{
+      width:36px; height:36px;
+      border:1px solid var(--line);
+      border-radius: 14px;
+      background:#fff;
+      box-shadow: 0 6px 14px rgba(0,0,0,.05);
+      display:grid; place-items:center;
+      font-size:18px;
+    }
+    .kicker{
+      font-size:11px;
+      font-weight:900;
+      letter-spacing:.08em;
+      color:#6b7280;
+      text-transform:uppercase;
+    }
+    .card h3{
+      margin:4px 0 0;
+      font-size:18px;
+      font-weight:900;
+    }
+    .list{
+      margin:12px 0 0;
+      padding:0;
+      list-style:none;
+      color:#374151;
+      line-height:1.7;
+      font-size:14px;
+    }
+    .list li{display:flex; gap:8px; margin-top:6px}
+    .list li:first-child{margin-top:0}
+    .chev{margin-top:2px; color:#111827; opacity:.7}
+
+    .cta-box{
+      margin-top:14px;
+      border:1px solid var(--line);
+      background:#fff;
+      border-radius: var(--radius);
+      padding:18px;
+      box-shadow: 0 10px 24px rgba(0,0,0,.05);
+      display:flex;
+      flex-direction:column;
+      gap:14px;
+    }
+    @media (min-width: 640px){
+      .cta-box{flex-direction:row; align-items:center; justify-content:space-between}
+    }
+    .cta-box .tt{font-weight:900}
+    .cta-box .dd{margin-top:6px; color:#6b7280; font-size:14px}
+    .cta-box .actions{display:flex; gap:8px; flex-direction:column}
+    @media (min-width: 640px){ .cta-box .actions{flex-direction:row} }
+
+    /* Footer */
+    footer{
+      padding: 26px 0 46px;
+      border-top: 1px solid var(--line);
+      background: rgba(255,255,255,.6);
+      backdrop-filter: blur(10px);
+      color:#6b7280;
+      font-size:14px;
+    }
+    .foot{
+      display:flex; flex-direction:column; gap:8px;
+      align-items:flex-start; justify-content:space-between;
+    }
+    @media (min-width: 640px){ .foot{flex-direction:row; align-items:center} }
+
+    /* Focus */
+    a:focus, button:focus{
+      outline:none;
+      box-shadow: 0 0 0 4px var(--focus);
+      border-radius: 16px;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="container">
+      <div class="header-inner">
+        <a class="brand" href="#" id="topLink" aria-label="상단으로">
+          <div class="logo">MJ</div>
+          <div class="brand-title">
+            <div class="name">MusaJoy</div>
+            <div class="sub">코딩수업 · 메이커교육</div>
+          </div>
+        </a>
+
+        <nav class="nav" aria-label="메인 메뉴">
+          <a href="#intro" data-nav="intro">소개</a>
+          <a href="#arduino" data-nav="arduino">아두이노</a>
+          <a href="#microbit" data-nav="microbit">마이크로비트</a>
+          <a href="#python" data-nav="python">파이썬</a>
+          <a href="#block" data-nav="block">블록코딩</a>
+          <a href="#unplugged" data-nav="unplugged">언플러그드</a>
+        </nav>
+
+        <a class="cta" href="#contact">문의</a>
+      </div>
+    </div>
+
+    <!-- Mobile nav -->
+    <div class="mnav-wrap" aria-label="모바일 메뉴">
+      <div class="container">
+        <div class="mnav">
+          <button type="button" data-mnav="intro">소개</button>
+          <button type="button" data-mnav="arduino">아두이노</button>
+          <button type="button" data-mnav="microbit">마이크로비트</button>
+          <button type="button" data-mnav="python">파이썬</button>
+          <button type="button" data-mnav="block">블록코딩</button>
+          <button type="button" data-mnav="unplugged">언플러그드</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <main>
+    <div class="container">
+      <section class="hero" aria-label="메인">
+        <div class="hero-grid">
+          <div>
+            <div class="chips">
+              <span class="chip">즐겁게 배우는 코딩</span>
+              <span class="chip">메이커 · 문제해결</span>
+              <span class="chip">초등~중등 추천</span>
+            </div>
+
+            <h1>
+              MusaJoy 코딩수업
+              <span style="display:block; color:#6b7280; font-weight:700">만들며 배우고, 발표하며 성장해요.</span>
+            </h1>
+
+            <p class="lead">
+              아두이노·마이크로비트·파이썬·블록코딩·언플러그드를 한 곳에서. <br/>
+              흥미 → 원리 이해 → 프로젝트 제작 → 공유(발표)까지 이어지는 수업 흐름으로
+              학생이 스스로 ‘할 수 있다’를 경험하도록 설계합니다.
+            </p>
+
+            <div class="hero-actions">
+              <a class="btn primary" href="#intro">커리큘럼 한눈에 보기</a>
+              <a class="btn" href="#contact">수업 문의하기</a>
+            </div>
+
+            <div class="stats" role="list" aria-label="수업 특징">
+              <div class="stat" role="listitem">
+                <div class="k">수업 형태</div>
+                <div class="v">정규 · 방과후 · 캠프</div>
+              </div>
+              <div class="stat" role="listitem">
+                <div class="k">수업 방식</div>
+                <div class="v">프로젝트 기반(PBL)</div>
+              </div>
+              <div class="stat" role="listitem">
+                <div class="k">결과물</div>
+                <div class="v">작품 · 포트폴리오</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mascot-wrap" aria-label="마스코트">
+            <div class="glow" aria-hidden="true"></div>
+            <div class="mascot">
+              <div class="mascot-top">
+                <div>
+                  <div class="t1">마스코트</div>
+                  <div class="t2">MusaJoy와 함께 시작해요</div>
+                </div>
+                <div class="badge">PNG / 투명배경 OK</div>
+              </div>
+
+              <div class="mascot-img">
+                <!-- ✅ index.html과 같은 폴더에 '부캐.png'를 넣으면 표시됩니다 -->
+                <img src="부캐.png" alt="MusaJoy 마스코트" draggable="false" />
+              </div>
+
+              <div class="keyword">
+                <b>키워드</b>
+                MusaJoy · 만들며 배우는 코딩 · 즐거운 프로젝트
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- 소개 -->
+    <section id="intro" aria-label="소개">
+      <div class="container">
+        <div class="section-head">
+          <h2>소개</h2>
+          <p>‘재미’로 시작해 ‘이해’로 연결하고, ‘작품’으로 완성합니다. MusaJoy 수업은 단계별 성취감을 설계합니다.</p>
+        </div>
+
+        <div class="grid">
+          <div class="card">
+            <div class="card-top">
+              <div class="icon" aria-hidden="true">✨</div>
+              <div>
+                <div class="kicker">Flow</div>
+                <h3>수업 흐름</h3>
+              </div>
+            </div>
+            <ul class="list">
+              <li><span class="chev">›</span><span>흥미 유발(미션/퀴즈) → 핵심 개념(짧게) → 실습(바로) → 프로젝트(확장)</span></li>
+              <li><span class="chev">›</span><span>팀 활동/발표로 의사소통과 협업 역량까지 함께 기릅니다.</span></li>
+              <li><span class="chev">›</span><span>초급/중급/심화 레벨로 구성해 학년·수준별 맞춤 운영이 가능합니다.</span></li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <div class="card-top">
+              <div class="icon" aria-hidden="true">🧠</div>
+              <div>
+                <div class="kicker">Goal</div>
+                <h3>수업 목표</h3>
+              </div>
+            </div>
+            <ul class="list">
+              <li><span class="chev">›</span><span>컴퓨팅 사고(분해/패턴/추상화/알고리즘) 체화</span></li>
+              <li><span class="chev">›</span><span>문제해결력과 자기주도 학습 태도 강화</span></li>
+              <li><span class="chev">›</span><span>작품 제작을 통한 성취 경험과 포트폴리오 구축</span></li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <div class="card-top">
+              <div class="icon" aria-hidden="true">🧩</div>
+              <div>
+                <div class="kicker">Options</div>
+                <h3>운영 옵션</h3>
+              </div>
+            </div>
+            <ul class="list">
+              <li><span class="chev">›</span><span>방과후/동아리: 8~16차시 구성</span></li>
+              <li><span class="chev">›</span><span>정규 수업: 성취기준 기반 맞춤 편성</span></li>
+              <li><span class="chev">›</span><span>캠프/특강: 하루~2박3일 프로젝트 집중형</span></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="cta-box" style="margin-top:14px">
+          <div>
+            <div class="tt">수업 문의 / 협업</div>
+            <div class="dd">학교·기관·동아리·방과후·캠프 등 맞춤 커리큘럼으로 진행합니다.</div>
+          </div>
+          <div class="actions">
+            <a class="btn primary" href="#contact">문의하기</a>
+            <a class="btn" href="#intro">커리큘럼 보기</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 아두이노 -->
+    <section id="arduino" aria-label="아두이노">
+      <div class="container">
+        <div class="section-head">
+          <h2>아두이노</h2>
+          <p>센서·LED·모터를 연결해 ‘실제 세계’를 움직이는 코딩을 경험합니다.</p>
+        </div>
+
+        <div class="grid">
+          <div class="card">
+            <div class="card-top">
+              <div class="icon" aria-hidden="true">⚙️</div>
+              <div>
+                <div class="kicker">Core</div>
+                <h3>핵심 개념</h3>
+              </div>
+            </div>
+            <ul class="list">
+              <li><span class="chev">›</span><span>입출력(LED/버튼), PWM, 아날로그 센서 읽기</span></li>
+              <li><span class="chev">›</span><span>시리얼 통신으로 데이터 확인/디버깅</span></li>
+              <li><span class="chev">›</span><span>조건/반복을 활용한 장치 제어</span></li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <div class="card-top">
+              <div class="icon" aria-hidden="true">💡</div>
+              <div>
+                <div class="kicker">Project</div>
+                <h3>추천 프로젝트</h3>
+              </div>
+            </div>
+            <ul class="list">
+              <li><span class="chev">›</span><span>스마트 무드등(조도센서 + RGB LED)</span></li>
+              <li><span class="chev">›</span><span>미니 신호등/횡단보도(버튼 + 타이머)</span></li>
+              <li><span class="chev">›</span><span>거리 경보기(초음파 센서 + 부저)</span></li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <div class="card-top">
+              <div class="icon" aria-hidden="true">🛠️</div>
+              <div>
+                <div class="kicker">Extend</div>
+                <h3>확장</h3>
+              </div>
+            </div>
+            <ul class="list">
+              <li><span class="chev">›</span><span>서보/DC 모터로 움직임 구현</span></li>
+              <li><span class="chev">›</span><span>센서 데이터로 간단한 ‘스마트’ 기능 설계</span></li>
+              <li><span class="chev">›</span><span>팀별 아이디어를 제품처럼 발표/시연</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 마이크로비트 -->
+    <section id="microbit" aria-label="마이크로비트">
+      <div class="container">
+        <div class="section-head">
+          <h2>마이크로비트</h2>
+          <p>LED 매트릭스, 버튼, 가속도, 라디오 통신까지—작고 강력한 보드로 빠르게 프로젝트를 완성합니다.</p>
+        </div>
+
+        <div class="grid">
+          <div class="card">
+            <div class="card-top">
+              <div class="icon" aria-hidden="true">📟</div>
+              <div>
+                <div class="kicker">Core</div>
+                <h3>핵심 개념</h3>
+              </div>
+            </div>
+            <ul class="list">
+              <li><span class="chev">›</span><span>입력(버튼/흔들기/기울이기)과 출력(LED/사운드)</span></li>
+              <li><span class="chev">›</span><span>변수/조건/반복으로 게임 로직 만들기</span></li>
+              <li><span class="chev">›</span><span>라디오 통신으로 팀 게임/협업 미션</span></li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <div class="card-top">
+              <div class="icon" aria-hidden="true">🎮</div>
+              <div>
+                <div class="kicker">Project</div>
+                <h3>추천 프로젝트</h3>
+              </div>
+            </div>
+            <ul class="list">
+              <li><span class="chev">›</span><span>LED 뱃지·표정 만들기</span></li>
+              <li><span class="chev">›</span><span>가속도 기반 미니 게임(피하기/달리기)</span></li>
+              <li><span class="chev">›</span><span>무선 퀴즈 버저(라디오 통신)</span></li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <div class="card-top">
+              <div class="icon" aria-hidden="true">🚀</div>
+              <div>
+                <div class="kicker">Tip</div>
+                <h3>활용 팁</h3>
+              </div>
+            </div>
+            <ul class="list">
+              <li><span class="chev">›</span><span>블록→파이썬 전환이 쉬워 ‘단계 상승’에 적합</span></li>
+              <li><span class="chev">›</span><span>완성 속도가 빨라 발표/피드백 시간을 충분히 확보</span></li>
+              <li><span class="chev">›</span><span>센서 + 스토리텔링으로 창의 프로젝트 구성</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 파이썬 -->
+    <section id="python" aria-label="파이썬">
+      <div class="container">
+        <div class="section-head">
+          <h2>파이썬</h2>
+          <p>텍스트 코딩으로 사고를 정교하게—데이터, 자동화, 간단한 게임까지 확장합니다.</p>
+        </div>
+
+        <div class="grid">
+          <div class="card">
+            <div class="card-top">
+              <div class="icon" aria-hidden="true">🐍</div>
+              <div>
+                <div class="kicker">Core</div>
+                <h3>핵심 개념</h3>
+              </div>
+            </div>
+            <ul class="list">
+              <li><span class="chev">›</span><span>변수/자료형/조건/반복/함수</span></li>
+              <li><span class="chev">›</span><span>리스트/딕셔너리로 데이터 다루기</span></li>
+              <li><span class="chev">›</span><span>디버깅 습관(출력/단계적 확인) 만들기</span></li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <div class="card-top">
+              <div class="icon" aria-hidden="true">🧪</div>
+              <div>
+                <div class="kicker">Project</div>
+                <h3>추천 프로젝트</h3>
+              </div>
+            </div>
+            <ul class="list">
+              <li><span class="chev">›</span><span>텍스트 RPG 또는 퀴즈 게임</span></li>
+              <li><span class="chev">›</span><span>간단한 계산기/자동 채점 도구</span></li>
+              <li><span class="chev">›</span><span>거북이 그래픽으로 패턴 아트</span></li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <div class="card-top">
+              <div class="icon" aria-hidden="true">📈</div>
+              <div>
+                <div class="kicker">Advanced</div>
+                <h3>심화 확장</h3>
+              </div>
+            </div>
+            <ul class="list">
+              <li><span class="chev">›</span><span>CSV/간단한 데이터 분석(수준에 맞춰)</span></li>
+              <li><span class="chev">›</span><span>파이썬으로 마이크로비트 제어 연계</span></li>
+              <li><span class="chev">›</span><span>프로젝트 구조화(모듈/함수 분리)</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 블록코딩 -->
+    <section id="block" aria-label="블록코딩">
+      <div class="container">
+        <div class="section-head">
+          <h2>블록코딩</h2>
+          <p>엔트리/스크래치/메이크코드 등 블록 기반으로 ‘알고리즘’의 감각을 먼저 잡습니다.</p>
+        </div>
+
+        <div class="grid">
+          <div class="card">
+            <div class="card-top">
+              <div class="icon" aria-hidden="true">🧱</div>
+              <div>
+                <div class="kicker">Why</div>
+                <h3>왜 블록코딩인가</h3>
+              </div>
+            </div>
+            <ul class="list">
+              <li><span class="chev">›</span><span>문법 부담 없이 논리(조건·반복·이벤트)에 집중</span></li>
+              <li><span class="chev">›</span><span>즉시 실행/피드백으로 학습 몰입 유지</span></li>
+              <li><span class="chev">›</span><span>초등 저학년~중학년까지 폭넓게 적용</span></li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <div class="card-top">
+              <div class="icon" aria-hidden="true">🎨</div>
+              <div>
+                <div class="kicker">Project</div>
+                <h3>추천 프로젝트</h3>
+              </div>
+            </div>
+            <ul class="list">
+              <li><span class="chev">›</span><span>스토리/애니메이션 제작(장면 전환, 대사)</span></li>
+              <li><span class="chev">›</span><span>미니게임(점수, 난이도, 아이템)</span></li>
+              <li><span class="chev">›</span><span>AI/데이터 체험(가능한 도구 범위에서)</span></li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <div class="card-top">
+              <div class="icon" aria-hidden="true">🔁</div>
+              <div>
+                <div class="kicker">Bridge</div>
+                <h3>텍스트 코딩으로 연결</h3>
+              </div>
+            </div>
+            <ul class="list">
+              <li><span class="chev">›</span><span>‘블록의 의미’를 코드로 번역하는 활동</span></li>
+              <li><span class="chev">›</span><span>조건/반복/함수 개념을 동일 용어로 유지</span></li>
+              <li><span class="chev">›</span><span>파이썬·C계열로 자연스럽게 확장</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 언플러그드 -->
+    <section id="unplugged" aria-label="언플러그드">
+      <div class="container">
+        <div class="section-head">
+          <h2>언플러그드</h2>
+          <p>컴퓨터 없이도 컴퓨팅 사고를 배우는 활동. 코딩 수업의 ‘이해’와 ‘협업’을 탄탄하게 만듭니다.</p>
+        </div>
+
+        <div class="grid">
+          <div class="card">
+            <div class="card-top">
+              <div class="icon" aria-hidden="true">🃏</div>
+              <div>
+                <div class="kicker">Activity</div>
+                <h3>활동 예시</h3>
+              </div>
+            </div>
+            <ul class="list">
+              <li><span class="chev">›</span><span>알고리즘 카드로 ‘정렬/탐색’ 게임</span></li>
+              <li><span class="chev">›</span><span>조건문 미로 탈출(규칙 만들기)</span></li>
+              <li><span class="chev">›</span><span>디버깅 릴레이: 오류 찾고 고치기</span></li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <div class="card-top">
+              <div class="icon" aria-hidden="true">🧭</div>
+              <div>
+                <div class="kicker">How</div>
+                <h3>수업에 넣는 방식</h3>
+              </div>
+            </div>
+            <ul class="list">
+              <li><span class="chev">›</span><span>도입: 개념 맛보기(5~10분)</span></li>
+              <li><span class="chev">›</span><span>중간: 막힐 때 재정비(리셋 활동)</span></li>
+              <li><span class="chev">›</span><span>마무리: 발표/피드백 규칙 만들기</span></li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <div class="card-top">
+              <div class="icon" aria-hidden="true">💪</div>
+              <div>
+                <div class="kicker">Impact</div>
+                <h3>효과</h3>
+              </div>
+            </div>
+            <ul class="list">
+              <li><span class="chev">›</span><span>수학적 사고·언어화 능력 강화</span></li>
+              <li><span class="chev">›</span><span>협업과 역할 분담 훈련</span></li>
+              <li><span class="chev">›</span><span>코딩 불안감을 낮추고 자신감 상승</span></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="cta-box">
+          <div>
+            <div class="tt">수업 문의 / 협업</div>
+            <div class="dd">학교·기관·동아리·방과후·캠프 등 맞춤 커리큘럼으로 진행합니다.</div>
+          </div>
+          <div class="actions">
+            <a class="btn primary" href="#contact">문의하기</a>
+            <a class="btn" href="#intro">커리큘럼 보기</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact" aria-label="문의">
+      <div class="container">
+        <div class="section-head">
+          <h2>문의</h2>
+          <p>아래 정보는 예시입니다. 실제 연락처/링크로 바꿔서 사용하세요.</p>
+        </div>
+
+        <div class="grid" style="grid-template-columns:1fr; gap:14px">
+          <div class="card">
+            <div class="card-top">
+              <div class="icon" aria-hidden="true">📮</div>
+              <div>
+                <div class="kicker">Contact</div>
+                <h3>연락처</h3>
+              </div>
+            </div>
+            <ul class="list">
+              <li><span class="chev">›</span><span>이메일: musa-joy@example.com</span></li>
+              <li><span class="chev">›</span><span>전화: 010-0000-0000</span></li>
+              <li><span class="chev">›</span><span>지역: 전북 / 온라인 가능</span></li>
+            </ul>
+            <div class="keyword" style="margin-top:14px">
+              <b>빠르게 상담하려면</b>
+              대상(학년/수준/인원) · 형태(정규/방과후/캠프 & 차시) · 희망 주제(아두이노/마이크로비트/파이썬/블록/언플러그드)
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="container">
+        <div class="foot">
+          <div>© <span id="year"></span> MusaJoy. All rights reserved.</div>
+          <div>Made with 💡 for joyful coding.</div>
+        </div>
+      </div>
+    </footer>
+  </main>
+
+  <script>
+    // Year
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    // Smooth scroll with header offset
+    function scrollToId(id){
+      const el = document.getElementById(id);
+      if(!el) return;
+      const y = el.getBoundingClientRect().top + window.scrollY - 92;
+      window.scrollTo({ top: y, behavior: "smooth" });
+    }
+
+    // Top link
+    document.getElementById("topLink").addEventListener("click", (e) => {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+
+    // Intercept nav anchors for offset scroll
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener("click", (e) => {
+        const href = a.getAttribute("href");
+        if(!href || href === "#") return;
+        const id = href.replace("#", "");
+        const el = document.getElementById(id);
+        if(!el) return;
+        e.preventDefault();
+        scrollToId(id);
+      });
+    });
+
+    // Mobile nav buttons
+    document.querySelectorAll("[data-mnav]").forEach(btn => {
+      btn.addEventListener("click", () => scrollToId(btn.dataset.mnav));
+    });
+
+    // Active section highlight
+    const sectionIds = ["intro","arduino","microbit","python","block","unplugged"];
+    const sections = sectionIds.map(id => document.getElementById(id)).filter(Boolean);
+
+    function setActive(id){
+      document.querySelectorAll("[data-nav]").forEach(a => {
+        a.classList.toggle("active", a.dataset.nav === id);
+      });
+      document.querySelectorAll("[data-mnav]").forEach(b => {
+        b.classList.toggle("active", b.dataset.mnav === id);
+      });
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+      const visible = entries
+        .filter(e => e.isIntersecting)
+        .sort((a,b) => (b.intersectionRatio||0) - (a.intersectionRatio||0));
+      if(visible[0]?.target?.id) setActive(visible[0].target.id);
+    }, {
+      threshold: [0.15,0.25,0.35,0.45,0.55],
+      rootMargin: "-20% 0px -65% 0px"
+    });
+
+    sections.forEach(s => observer.observe(s));
+    setActive("intro");
+  </script>
+</body>
+</html>
